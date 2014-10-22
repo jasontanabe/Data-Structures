@@ -10,23 +10,23 @@ using namespace std;
 template <class Data>
 class SkipList {
 public:
-																		SkipList(int max_level);
-																		~SkipList();
+                                    SkipList(int max_level);
+                                    ~SkipList();
 
-	void															Insert(const Data& data);				
-	void															Remove(const Data& data);
-	SkipNode<Data>*										Search(const Data& data);
-	void															Display() const;
+  void                              Insert(const Data& data);				
+  void                              Remove(const Data& data);
+  SkipNode<Data>*                   Search(const Data& data);
+  void                              Display() const;
 private:
-	void															Init();
+  void                              Init();
 
-	int																RandomLevel() const;
-	bool															FlipCoin() const;
+  int                               RandomLevel() const;
+  bool                              FlipCoin() const;
 
-	SkipNode<Data>										head_;
-	vector<SkipNode<Data>*>						update_nodes_;
-	int																current_level_;
-	int																max_height_;
+  SkipNode<Data>                    head_;
+  vector<SkipNode<Data>*>           update_nodes_;
+  int                               current_level_;
+  int                               max_height_;
 };
 
 #include "skip_list_temp.h"

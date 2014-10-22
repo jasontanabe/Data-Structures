@@ -14,20 +14,20 @@ using namespace std;
 template <class Data>
 class SkipNode {
 public:
-																	SkipNode(int height, Data data);
-																	~SkipNode();
+                                  SkipNode(int height, Data data);
+                                  ~SkipNode();
 
-	SkipNode<Data>*									GetForward(int index) const;
-	Data														GetData() const;
-	int															GetHeight() const;
+  SkipNode<Data>*                 GetForward(int index) const;
+  Data                            GetData() const;
+  int                             GetHeight() const;
 
-	void														SetForward(int index, SkipNode<Data>* node);
+  void                            SetForward(int index, SkipNode<Data>* node);
 private:
-	void														Init();
+  void                            Init();
 
-	Data														data_;
-	vector<SkipNode<Data>*>					forward_;
-	int															height_;
+  Data                            data_;
+  vector<SkipNode<Data>*>         forward_;
+  int                             height_;
 };
 
 #include "skip_node_temp.h"
