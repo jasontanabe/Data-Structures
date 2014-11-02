@@ -13,7 +13,8 @@ template <class Data>
 void SkipList<Data>::Insert(const Data& data) {
   SkipNode<Data>* node = &head_;
   for (int i = current_level_; i >= 0; --i) {
-    while (node->GetForward(i) != NULL && node->GetForward(i)->GetData() < data) {
+    while (node->GetForward(i) != NULL && 
+           LessThan(node->GetForward(i)->GetData(),data)) {
       node = node->GetForward(i);
     }
     update_nodes_[i] = node;
@@ -38,11 +39,23 @@ void SkipList<Data>::Insert(const Data& data) {
 template <class Data>
 void	SkipList<Data>::Remove(const Data& data) {
   SkipNode<Data>* node = &head_;
+  SkipNode<Data>* tempNode = NULL;
+  bool found = false;
   for (int i = current_level_; i >= 0; --i) {
-    while (node->GetForward(i) != NULL && node->GetForward(i)->GetData() < data) {
+    tempNode = node;
+    while (node->GetForward(i) != NULL && 
+           LessThanOrEqual(node->GetForward(i)->GetData(), data)) {
+      if (node->GetForward(i)->GetData() == data) {
+        found = true;
+        break;
+      }
       node = node->GetForward(i);
     }
+    if (!found) {
+      node = tempNode;
+    }
     update_nodes_[i] = node;
+    found = false;
   }
   node = node->GetForward(0);
   if (node == NULL || node->GetData() != data) {
@@ -67,7 +80,11 @@ template <class Data>
 SkipNode<Data>* SkipList<Data>::Search(const Data& data) {
   SkipNode<Data>* node = &head_;
   for (int i = current_level_; i >= 0; --i) {
-    while (node->GetForward(i) != NULL && node->GetForward(i)->GetData() < data) {
+    while (node->GetForward(i) != NULL && 
+           LessThanOrEqual(node->GetForward(i)->GetData(), data)) {
+      if (node->GetForward(i)->GetData() == data) {
+        break;
+      }
       node = node->GetForward(i);			
     }
   }
@@ -87,6 +104,16 @@ void SkipList<Data>::Display() const {
   }
 }
 
+template <class Data>
+void SkipList<Data>::SetLessThanFunction(CompareFunction func) {
+  LessThan = func;  
+}
+
+template <class Data>
+void SkipList<Data>::SetLessOrEqualThanFunction(CompareFunction func) {
+  LessThanOrEqual = func;  
+}
+
 ///////////////////////
 // private functions //
 ///////////////////////
@@ -99,6 +126,8 @@ void SkipList<Data>::Init() {
     head_.SetForward(i, NULL);
     update_nodes_[i] = &head_;
   }
+  LessThan = &DefaultLessThan;
+  LessThanOrEqual = &DefaultLessThanOrEqual;
 }
 
 template <class Data>
@@ -111,4 +140,16 @@ int SkipList<Data>::RandomLevel() const {
   int level = 0;
   for (level; FlipCoin(); ++level);
   return level;
+}
+
+template <class Data>
+bool SkipList<Data>::DefaultLessThan(const Data& data1,
+                                     const Data& data2) {
+  return data1 < data2;
+}
+
+template <class Data>
+bool SkipList<Data>::DefaultLessThanOrEqual(const Data& data1,
+                                            const Data& data2) {
+  return data1 <= data2;
 }
